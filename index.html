@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>باغ جادویی - بازی انجام کارها</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="animated-bg">
+        <div class="floating-shape shape-1"></div>
+        <div class="floating-shape shape-2"></div>
+        <div class="floating-shape shape-3"></div>
+        <div class="floating-shape shape-4"></div>
+    </div>
+
+    <div class="app-container">
+
+        <!-- Setup Screen -->
+        <div id="setup-screen" class="screen">
+            <div class="glass-card setup-card">
+                <div class="setup-header">
+                    <div class="logo-icon">🌱</div>
+                    <h1>باغ جادویی</h1>
+                    <p class="subtitle">بیا با هم یه ماجراجویی شروع کنیم!</p>
+                </div>
+
+                <form id="setup-form" class="setup-form">
+                    <div class="input-group">
+                        <label for="child-name">
+                            <span class="input-icon">👶</span>
+                            اسم تو چیه؟
+                        </label>
+                        <input
+                            type="text"
+                            id="child-name"
+                            class="glass-input"
+                            placeholder="مثلاً: ماهور"
+                            required
+                            maxlength="20"
+                        >
+                    </div>
+
+                    <div class="input-group">
+                        <label for="prize-name">
+                            <span class="input-icon">🎁</span>
+                            جایزه‌ات چی باشه؟
+                        </label>
+                        <input
+                            type="text"
+                            id="prize-name"
+                            class="glass-input"
+                            placeholder="مثلاً: رفتن به پارک"
+                            required
+                            maxlength="30"
+                        >
+                    </div>
+
+                    <div class="input-group">
+                        <label for="target-xp">
+                            <span class="input-icon">⭐</span>
+                            چند تا قطره آب لازمه؟
+                        </label>
+                        <div class="range-container">
+                            <input
+                                type="range"
+                                id="target-xp"
+                                class="glass-range"
+                                min="50"
+                                max="200"
+                                value="100"
+                                step="10"
+                            >
+                            <div class="range-value">
+                                <span id="target-xp-display">100</span>
+                                <span class="drop-icon">💧</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="glass-button primary-button">
+                        <span>شروع کن</span>
+                        <span class="button-icon">🚀</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Dashboard Screen -->
+        <div id="dashboard-screen" class="screen hidden">
+            <!-- Header -->
+            <header class="glass-header">
+                <div class="header-content">
+                    <div class="user-info">
+                        <span class="user-avatar">🧒</span>
+                        <span id="display-name" class="user-name"></span>
+                    </div>
+                    <div class="xp-display">
+                        <span id="current-xp-header">0</span>
+                        <span class="xp-separator">/</span>
+                        <span id="target-xp-header">100</span>
+                        <span class="drop-icon-small">💧</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <main class="dashboard-main">
+                <!-- Cactus Progress Section -->
+                <div class="glass-card progress-card">
+                    <div class="cactus-container">
+                        <div class="speech-bubble" id="speech-bubble">
+                            <span id="cactus-message">تشنمه! بهم امتیاز بده!</span>
+                        </div>
+                        <div class="cactus-wrapper">
+                            <div class="cactus-base">
+                                <svg class="cactus-svg" viewBox="0 0 120 180" xmlns="http://www.w3.org/2000/svg">
+                                    <!-- Cactus pot -->
+                                    <ellipse cx="60" cy="170" rx="35" ry="8" fill="#8B4513"/>
+                                    <path d="M30 162 L35 175 L85 175 L90 162 Z" fill="#A0522D"/>
+                                    <path d="M32 162 L88 162 L90 162 L85 175 L35 175 L30 162 Z" fill="#8B4513"/>
+
+                                    <!-- Cactus body mask -->
+                                    <defs>
+                                        <clipPath id="cactusClip">
+                                            <path d="M60 10
+                                                     C75 10 85 25 85 45
+                                                     L85 60
+                                                     L95 55 C105 55 110 65 110 75 C110 90 100 95 90 95 L85 95
+                                                     L85 130
+                                                     C85 150 75 160 60 160
+                                                     C45 160 35 150 35 130
+                                                     L35 95 L30 95 C20 95 10 90 10 75 C10 65 15 55 25 55 L35 60
+                                                     L35 45
+                                                     C35 25 45 10 60 10 Z"/>
+                                        </clipPath>
+                                    </defs>
+
+                                    <!-- Cactus outline (unfilled) -->
+                                    <path class="cactus-outline" d="M60 10
+                                                     C75 10 85 25 85 45
+                                                     L85 60
+                                                     L95 55 C105 55 110 65 110 75 C110 90 100 95 90 95 L85 95
+                                                     L85 130
+                                                     C85 150 75 160 60 160
+                                                     C45 160 35 150 35 130
+                                                     L35 95 L30 95 C20 95 10 90 10 75 C10 65 15 55 25 55 L35 60
+                                                     L35 45
+                                                     C35 25 45 10 60 10 Z"/>
+
+                                    <!-- Cactus fill (animated) -->
+                                    <g clip-path="url(#cactusClip)">
+                                        <rect id="cactus-fill" class="cactus-fill" x="0" y="160" width="120" height="0"/>
+                                    </g>
+
+                                    <!-- Cactus details -->
+                                    <ellipse cx="45" cy="60" rx="4" ry="6" fill="rgba(255,255,255,0.3)"/>
+                                    <ellipse cx="70" cy="80" rx="3" ry="5" fill="rgba(255,255,255,0.3)"/>
+                                    <ellipse cx="55" cy="110" rx="4" ry="6" fill="rgba(255,255,255,0.3)"/>
+
+                                    <!-- Cute face -->
+                                    <ellipse cx="50" cy="45" rx="4" ry="5" fill="#2D5016"/>
+                                    <ellipse cx="70" cy="45" rx="4" ry="5" fill="#2D5016"/>
+                                    <ellipse cx="51" cy="44" rx="1.5" ry="2" fill="white"/>
+                                    <ellipse cx="71" cy="44" rx="1.5" ry="2" fill="white"/>
+                                    <path d="M55 55 Q60 62 65 55" stroke="#2D5016" stroke-width="2" fill="none" stroke-linecap="round" id="cactus-mouth"/>
+
+                                    <!-- Blush -->
+                                    <ellipse cx="42" cy="52" rx="5" ry="3" fill="rgba(255,182,193,0.5)"/>
+                                    <ellipse cx="78" cy="52" rx="5" ry="3" fill="rgba(255,182,193,0.5)"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="progress-info">
+                            <div class="progress-bar-container">
+                                <div class="progress-bar" id="progress-bar"></div>
+                            </div>
+                            <div class="progress-text">
+                                <span id="current-xp-display">0</span>
+                                <span> از </span>
+                                <span id="target-xp-display-dashboard">100</span>
+                                <span> قطره 💧</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="prize-display">
+                        <span class="prize-label">جایزه:</span>
+                        <span id="prize-display" class="prize-name">🎁</span>
+                    </div>
+                </div>
+
+                <!-- Tasks Grid -->
+                <div class="tasks-section">
+                    <h2 class="section-title">کارهای امروز</h2>
+                    <div class="tasks-grid" id="tasks-grid">
+                        <!-- Tasks will be generated by JavaScript -->
+                    </div>
+                </div>
+            </main>
+
+            <!-- Footer -->
+            <footer class="glass-footer">
+                <button class="glass-button footer-button" id="settings-btn">
+                    <span class="button-icon">⚙️</span>
+                    <span>تنظیمات</span>
+                </button>
+                <button class="glass-button footer-button danger" id="reset-btn">
+                    <span class="button-icon">🔄</span>
+                    <span>شروع دوباره</span>
+                </button>
+            </footer>
+        </div>
+
+        <!-- Settings Modal -->
+        <div id="settings-modal" class="modal hidden">
+            <div class="modal-overlay"></div>
+            <div class="glass-card modal-content">
+                <div class="modal-header">
+                    <h2>⚙️ تنظیمات</h2>
+                    <button class="close-button" id="close-settings">&times;</button>
+                </div>
+                <form id="settings-form" class="settings-form">
+                    <div class="input-group">
+                        <label for="edit-child-name">
+                            <span class="input-icon">👶</span>
+                            اسم
+                        </label>
+                        <input
+                            type="text"
+                            id="edit-child-name"
+                            class="glass-input"
+                            maxlength="20"
+                        >
+                    </div>
+
+                    <div class="input-group">
+                        <label for="edit-prize-name">
+                            <span class="input-icon">🎁</span>
+                            جایزه
+                        </label>
+                        <input
+                            type="text"
+                            id="edit-prize-name"
+                            class="glass-input"
+                            maxlength="30"
+                        >
+                    </div>
+
+                    <div class="input-group">
+                        <label for="edit-target-xp">
+                            <span class="input-icon">⭐</span>
+                            هدف
+                        </label>
+                        <div class="range-container">
+                            <input
+                                type="range"
+                                id="edit-target-xp"
+                                class="glass-range"
+                                min="50"
+                                max="200"
+                                step="10"
+                            >
+                            <div class="range-value">
+                                <span id="edit-target-xp-display">100</span>
+                                <span class="drop-icon">💧</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-actions">
+                        <button type="submit" class="glass-button primary-button">
+                            ذخیره کن
+                        </button>
+                        <button type="button" class="glass-button danger-button" id="clear-data-btn">
+                            پاک کردن همه چیز
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Celebration Modal -->
+        <div id="celebration-modal" class="modal hidden">
+            <div class="modal-overlay celebration-overlay"></div>
+            <div class="glass-card modal-content celebration-content">
+                <div class="confetti-container" id="confetti-container"></div>
+                <div class="celebration-emoji" id="celebration-emoji">🎉</div>
+                <h2 class="celebration-title">آفرین! رسیدی!</h2>
+                <p class="celebration-subtitle">وقت جایزه‌ته!</p>
+                <div class="prize-reveal">
+                    <span class="prize-icon">🎁</span>
+                    <span id="celebration-prize" class="prize-text"></span>
+                </div>
+                <button class="glass-button primary-button celebration-button" id="celebration-close">
+                    <span>عالیه!</span>
+                    <span class="button-icon">✨</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Confirm Reset Modal -->
+        <div id="confirm-modal" class="modal hidden">
+            <div class="modal-overlay"></div>
+            <div class="glass-card modal-content confirm-content">
+                <div class="confirm-icon">🤔</div>
+                <h2>مطمئنی؟</h2>
+                <p>همه امتیازات پاک میشه و از اول شروع میکنیم</p>
+                <div class="confirm-actions">
+                    <button class="glass-button" id="confirm-cancel">نه، بیخیال</button>
+                    <button class="glass-button danger-button" id="confirm-yes">آره، مطمئنم</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Audio for coin sound -->
+    <audio id="coin-sound" preload="auto">
+        <source src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3" type="audio/mpeg">
+    </audio>
+
+    <script src="app.js"></script>
+</body>
+</html>
