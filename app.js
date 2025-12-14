@@ -1,6 +1,7 @@
 /**
  * Kids Goals - Persian Task Gamification App
  * Liquid Glass Design System
+ * With Google Sheets Integration
  */
 
 // =====================================================
@@ -10,20 +11,33 @@
 const STORAGE_KEY = 'kidsGoalsData';
 
 const DEFAULT_DATA = {
+    // Parent info
+    parentName: '',
+    mobileNumber: '',
+    email: '',
+    // Child info
     childName: '',
     prizeName: '',
     targetXP: 100,
     currentXP: 0,
-    setupComplete: false
+    setupComplete: false,
+    // Google Sheets integration
+    webhookUrl: '',
+    // Timestamps
+    createdAt: null,
+    lastUpdated: null
 };
 
+// Updated tasks based on user request
 const TASKS = [
-    { id: 1, emoji: '🛏️', name: 'مرتب کردن تخت', xp: 1 },
-    { id: 2, emoji: '👕', name: 'پوشیدن لباس', xp: 1 },
-    { id: 3, emoji: '🧸', name: 'جمع کردن اسباب‌بازی', xp: 2 },
-    { id: 4, emoji: '🦷', name: 'مسواک زدن', xp: 1 },
-    { id: 5, emoji: '🍽️', name: 'چیدن میز', xp: 2 },
-    { id: 6, emoji: '🌵', name: 'آبیاری گل', xp: 3 }
+    { id: 1, emoji: '🍽️', name: 'تنهایی غذا خوردن', xp: 3 },
+    { id: 2, emoji: '📚', name: 'انجام دادن تکالیف', xp: 3 },
+    { id: 3, emoji: '🧼', name: 'شستن دست و مسواک زدن', xp: 2 },
+    { id: 4, emoji: '🧸', name: 'جمع کردن اسباب‌بازی', xp: 2 },
+    { id: 5, emoji: '👕', name: 'جمع کردن لباس', xp: 2 },
+    { id: 6, emoji: '🦉', name: 'انجام بازی دیولینگو', xp: 2 },
+    { id: 7, emoji: '📖', name: 'کتاب خوندن', xp: 2 },
+    { id: 8, emoji: '🍴', name: 'کمک در جمع و انداختن سفره', xp: 2 }
 ];
 
 const MESSAGES = [
@@ -57,6 +71,9 @@ const elements = {
 
     // Setup Form
     setupForm: document.getElementById('setup-form'),
+    parentNameInput: document.getElementById('parent-name'),
+    mobileNumberInput: document.getElementById('mobile-number'),
+    emailInput: document.getElementById('email'),
     childNameInput: document.getElementById('child-name'),
     prizeNameInput: document.getElementById('prize-name'),
     targetXPInput: document.getElementById('target-xp'),
@@ -83,10 +100,15 @@ const elements = {
     settingsModal: document.getElementById('settings-modal'),
     closeSettings: document.getElementById('close-settings'),
     settingsForm: document.getElementById('settings-form'),
+    editParentName: document.getElementById('edit-parent-name'),
+    editMobile: document.getElementById('edit-mobile'),
+    editEmail: document.getElementById('edit-email'),
     editChildName: document.getElementById('edit-child-name'),
     editPrizeName: document.getElementById('edit-prize-name'),
     editTargetXP: document.getElementById('edit-target-xp'),
     editTargetXPDisplay: document.getElementById('edit-target-xp-display'),
+    webhookUrl: document.getElementById('webhook-url'),
+    testWebhookBtn: document.getElementById('test-webhook-btn'),
     clearDataBtn: document.getElementById('clear-data-btn'),
 
     // Confirm Modal
@@ -123,6 +145,7 @@ function loadData() {
 
 function saveData() {
     try {
+        appData.lastUpdated = new Date().toISOString();
         localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
     } catch (e) {
         console.error('Error saving data:', e);
@@ -136,6 +159,110 @@ function clearData() {
     } catch (e) {
         console.error('Error clearing data:', e);
     }
+}
+
+// =====================================================
+// GOOGLE SHEETS INTEGRATION
+// =====================================================
+
+async function sendToGoogleSheets(action = 'update') {
+    if (!appData.webhookUrl) return;
+
+    const payload = {
+        action: action,
+        timestamp: new Date().toISOString(),
+        parentName: appData.parentName,
+        mobileNumber: appData.mobileNumber,
+        email: appData.email,
+        childName: appData.childName,
+        prizeName: appData.prizeName,
+        targetXP: appData.targetXP,
+        currentXP: appData.currentXP,
+        progress: Math.round((appData.currentXP / appData.targetXP) * 100),
+        createdAt: appData.createdAt
+    };
+
+    try {
+        // Using fetch with no-cors mode for Google Apps Script
+        await fetch(appData.webhookUrl, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload)
+        });
+        console.log('Data sent to Google Sheets');
+    } catch (e) {
+        console.error('Error sending to Google Sheets:', e);
+    }
+}
+
+async function testWebhookConnection() {
+    const webhookUrl = elements.webhookUrl.value.trim();
+
+    if (!webhookUrl) {
+        showToast('لطفاً آدرس Web App را وارد کنید', 'error');
+        return;
+    }
+
+    // Validate URL format
+    if (!webhookUrl.startsWith('https://script.google.com/')) {
+        showToast('آدرس باید با https://script.google.com/ شروع شود', 'error');
+        return;
+    }
+
+    const btn = elements.testWebhookBtn;
+    const originalHTML = btn.innerHTML;
+    btn.innerHTML = '<span class="loading-spinner"></span> در حال تست...';
+    btn.disabled = true;
+
+    try {
+        await fetch(webhookUrl, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                action: 'test',
+                timestamp: new Date().toISOString(),
+                message: 'Test connection from Kids Goals App'
+            })
+        });
+
+        showToast('درخواست ارسال شد! گوگل شیت را چک کنید', 'success');
+    } catch (e) {
+        showToast('خطا در اتصال. آدرس را بررسی کنید', 'error');
+    } finally {
+        btn.innerHTML = originalHTML;
+        btn.disabled = false;
+    }
+}
+
+// =====================================================
+// TOAST NOTIFICATIONS
+// =====================================================
+
+function showToast(message, type = 'info') {
+    // Remove existing toasts
+    document.querySelectorAll('.toast').forEach(t => t.remove());
+
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.textContent = message;
+    document.body.appendChild(toast);
+
+    // Trigger animation
+    requestAnimationFrame(() => {
+        toast.classList.add('show');
+    });
+
+    // Auto remove
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
 }
 
 // =====================================================
@@ -260,6 +387,9 @@ function handleTaskClick(task, event) {
     appData.currentXP += task.xp;
     saveData();
 
+    // Send to Google Sheets
+    sendToGoogleSheets('task_complete');
+
     // Play sound
     playSound();
 
@@ -306,6 +436,7 @@ function playSound() {
 function checkCelebration() {
     if (appData.currentXP >= appData.targetXP && !celebrationShown) {
         celebrationShown = true;
+        sendToGoogleSheets('goal_reached');
         showCelebration();
     }
 }
@@ -361,20 +492,62 @@ function hideModal(modal) {
     modal.classList.add('hidden');
 }
 
+// =====================================================
+// FORM HANDLERS
+// =====================================================
+
+function validateMobileNumber(number) {
+    // Iranian mobile number format: 09XXXXXXXXX
+    const pattern = /^09[0-9]{9}$/;
+    return pattern.test(number);
+}
+
+function convertPersianToEnglishDigits(str) {
+    const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+    const arabicDigits = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+
+    for (let i = 0; i < 10; i++) {
+        str = str.replace(new RegExp(persianDigits[i], 'g'), i);
+        str = str.replace(new RegExp(arabicDigits[i], 'g'), i);
+    }
+    return str;
+}
+
 function handleSetupSubmit(e) {
     e.preventDefault();
 
+    // Get and convert mobile number
+    const mobileNumber = convertPersianToEnglishDigits(elements.mobileNumberInput.value.trim());
+
+    // Validate mobile number
+    if (!validateMobileNumber(mobileNumber)) {
+        showToast('شماره موبایل باید ۱۱ رقم و با ۰۹ شروع شود', 'error');
+        elements.mobileNumberInput.focus();
+        return;
+    }
+
+    // Save data
+    appData.parentName = elements.parentNameInput.value.trim();
+    appData.mobileNumber = mobileNumber;
+    appData.email = elements.emailInput.value.trim();
     appData.childName = elements.childNameInput.value.trim();
     appData.prizeName = elements.prizeNameInput.value.trim();
     appData.targetXP = parseInt(elements.targetXPInput.value, 10);
     appData.currentXP = 0;
     appData.setupComplete = true;
+    appData.createdAt = new Date().toISOString();
 
     saveData();
+
+    // Send to Google Sheets
+    sendToGoogleSheets('registration');
+
     celebrationShown = false;
     renderTasks();
     updateDashboard();
     showScreen('dashboard');
+
+    showToast('خوش آمدی! بیا شروع کنیم 🌱', 'success');
 }
 
 function handleSettingsSubmit(e) {
@@ -382,10 +555,22 @@ function handleSettingsSubmit(e) {
 
     const newTargetXP = parseInt(elements.editTargetXP.value, 10);
     const oldTargetXP = appData.targetXP;
+    const mobileNumber = convertPersianToEnglishDigits(elements.editMobile.value.trim());
 
+    // Validate mobile number if provided
+    if (mobileNumber && !validateMobileNumber(mobileNumber)) {
+        showToast('شماره موبایل باید ۱۱ رقم و با ۰۹ شروع شود', 'error');
+        elements.editMobile.focus();
+        return;
+    }
+
+    appData.parentName = elements.editParentName.value.trim();
+    appData.mobileNumber = mobileNumber;
+    appData.email = elements.editEmail.value.trim();
     appData.childName = elements.editChildName.value.trim();
     appData.prizeName = elements.editPrizeName.value.trim();
     appData.targetXP = newTargetXP;
+    appData.webhookUrl = elements.webhookUrl.value.trim();
 
     // Reset celebration flag if target changed
     if (newTargetXP !== oldTargetXP) {
@@ -393,15 +578,24 @@ function handleSettingsSubmit(e) {
     }
 
     saveData();
+
+    // Send update to Google Sheets
+    sendToGoogleSheets('settings_update');
+
     updateDashboard();
     hideModal(elements.settingsModal);
+    showToast('تنظیمات ذخیره شد ✓', 'success');
 }
 
 function openSettings() {
+    elements.editParentName.value = appData.parentName;
+    elements.editMobile.value = appData.mobileNumber;
+    elements.editEmail.value = appData.email;
     elements.editChildName.value = appData.childName;
     elements.editPrizeName.value = appData.prizeName;
     elements.editTargetXP.value = appData.targetXP;
     elements.editTargetXPDisplay.textContent = appData.targetXP;
+    elements.webhookUrl.value = appData.webhookUrl || '';
     showModal(elements.settingsModal);
 }
 
@@ -413,8 +607,13 @@ function confirmReset() {
     appData.currentXP = 0;
     celebrationShown = false;
     saveData();
+
+    // Send reset to Google Sheets
+    sendToGoogleSheets('progress_reset');
+
     updateDashboard();
     hideModal(elements.confirmModal);
+    showToast('امتیازات صفر شد. از اول شروع کن! 💪', 'success');
 }
 
 function handleClearData() {
@@ -425,6 +624,9 @@ function handleClearData() {
         hideModal(elements.settingsModal);
 
         // Reset form
+        elements.parentNameInput.value = '';
+        elements.mobileNumberInput.value = '';
+        elements.emailInput.value = '';
         elements.childNameInput.value = '';
         elements.prizeNameInput.value = '';
         elements.targetXPInput.value = 100;
@@ -461,6 +663,7 @@ function setupEventListeners() {
     // Settings modal
     elements.closeSettings.addEventListener('click', () => hideModal(elements.settingsModal));
     elements.settingsForm.addEventListener('submit', handleSettingsSubmit);
+    elements.testWebhookBtn.addEventListener('click', testWebhookConnection);
     elements.clearDataBtn.addEventListener('click', handleClearData);
 
     // Confirm modal
@@ -497,6 +700,17 @@ function setupEventListeners() {
 
     // Range sliders
     setupRangeListeners();
+
+    // Auto-convert Persian digits in mobile input
+    elements.mobileNumberInput.addEventListener('input', (e) => {
+        e.target.value = convertPersianToEnglishDigits(e.target.value);
+    });
+
+    if (elements.editMobile) {
+        elements.editMobile.addEventListener('input', (e) => {
+            e.target.value = convertPersianToEnglishDigits(e.target.value);
+        });
+    }
 }
 
 // =====================================================

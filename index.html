@@ -30,54 +30,111 @@
                 </div>
 
                 <form id="setup-form" class="setup-form">
-                    <div class="input-group">
-                        <label for="child-name">
-                            <span class="input-icon">👶</span>
-                            اسم تو چیه؟
-                        </label>
-                        <input
-                            type="text"
-                            id="child-name"
-                            class="glass-input"
-                            placeholder="مثلاً: ماهور"
-                            required
-                            maxlength="20"
-                        >
-                    </div>
+                    <!-- Parent Information Section -->
+                    <div class="form-section">
+                        <h3 class="form-section-title">👨‍👩‍👧 اطلاعات والدین</h3>
 
-                    <div class="input-group">
-                        <label for="prize-name">
-                            <span class="input-icon">🎁</span>
-                            جایزه‌ات چی باشه؟
-                        </label>
-                        <input
-                            type="text"
-                            id="prize-name"
-                            class="glass-input"
-                            placeholder="مثلاً: رفتن به پارک"
-                            required
-                            maxlength="30"
-                        >
-                    </div>
-
-                    <div class="input-group">
-                        <label for="target-xp">
-                            <span class="input-icon">⭐</span>
-                            چند تا قطره آب لازمه؟
-                        </label>
-                        <div class="range-container">
+                        <div class="input-group">
+                            <label for="parent-name">
+                                <span class="input-icon">👤</span>
+                                نام والد
+                            </label>
                             <input
-                                type="range"
-                                id="target-xp"
-                                class="glass-range"
-                                min="50"
-                                max="200"
-                                value="100"
-                                step="10"
+                                type="text"
+                                id="parent-name"
+                                class="glass-input"
+                                placeholder="مثلاً: علی محمدی"
+                                maxlength="30"
                             >
-                            <div class="range-value">
-                                <span id="target-xp-display">100</span>
-                                <span class="drop-icon">💧</span>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="mobile-number">
+                                <span class="input-icon">📱</span>
+                                شماره موبایل <span class="required-badge">*</span>
+                            </label>
+                            <input
+                                type="tel"
+                                id="mobile-number"
+                                class="glass-input"
+                                placeholder="۰۹۱۲۳۴۵۶۷۸۹"
+                                required
+                                maxlength="11"
+                                pattern="09[0-9]{9}"
+                                dir="ltr"
+                            >
+                            <span class="input-hint">فرمت: ۰۹xxxxxxxxx</span>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="email">
+                                <span class="input-icon">📧</span>
+                                ایمیل <span class="optional-badge">(اختیاری)</span>
+                            </label>
+                            <input
+                                type="email"
+                                id="email"
+                                class="glass-input"
+                                placeholder="example@gmail.com"
+                                maxlength="50"
+                                dir="ltr"
+                            >
+                        </div>
+                    </div>
+
+                    <!-- Child Information Section -->
+                    <div class="form-section">
+                        <h3 class="form-section-title">👶 اطلاعات فرزند</h3>
+
+                        <div class="input-group">
+                            <label for="child-name">
+                                <span class="input-icon">🧒</span>
+                                اسم فرزند <span class="required-badge">*</span>
+                            </label>
+                            <input
+                                type="text"
+                                id="child-name"
+                                class="glass-input"
+                                placeholder="مثلاً: ماهور"
+                                required
+                                maxlength="20"
+                            >
+                        </div>
+
+                        <div class="input-group">
+                            <label for="prize-name">
+                                <span class="input-icon">🎁</span>
+                                جایزه <span class="required-badge">*</span>
+                            </label>
+                            <input
+                                type="text"
+                                id="prize-name"
+                                class="glass-input"
+                                placeholder="مثلاً: رفتن به پارک"
+                                required
+                                maxlength="30"
+                            >
+                        </div>
+
+                        <div class="input-group">
+                            <label for="target-xp">
+                                <span class="input-icon">⭐</span>
+                                چند تا قطره آب لازمه؟
+                            </label>
+                            <div class="range-container">
+                                <input
+                                    type="range"
+                                    id="target-xp"
+                                    class="glass-range"
+                                    min="50"
+                                    max="200"
+                                    value="100"
+                                    step="10"
+                                >
+                                <div class="range-value">
+                                    <span id="target-xp-display">100</span>
+                                    <span class="drop-icon">💧</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -219,57 +276,70 @@
         <!-- Settings Modal -->
         <div id="settings-modal" class="modal hidden">
             <div class="modal-overlay"></div>
-            <div class="glass-card modal-content">
+            <div class="glass-card modal-content settings-modal-content">
                 <div class="modal-header">
                     <h2>⚙️ تنظیمات</h2>
                     <button class="close-button" id="close-settings">&times;</button>
                 </div>
                 <form id="settings-form" class="settings-form">
-                    <div class="input-group">
-                        <label for="edit-child-name">
-                            <span class="input-icon">👶</span>
-                            اسم
-                        </label>
-                        <input
-                            type="text"
-                            id="edit-child-name"
-                            class="glass-input"
-                            maxlength="20"
-                        >
+                    <!-- Parent Info -->
+                    <div class="settings-section">
+                        <h4 class="settings-section-title">👤 اطلاعات والدین</h4>
+                        <div class="input-group">
+                            <label for="edit-parent-name">نام والد</label>
+                            <input type="text" id="edit-parent-name" class="glass-input" maxlength="30">
+                        </div>
+                        <div class="input-group">
+                            <label for="edit-mobile">شماره موبایل</label>
+                            <input type="tel" id="edit-mobile" class="glass-input" maxlength="11" dir="ltr">
+                        </div>
+                        <div class="input-group">
+                            <label for="edit-email">ایمیل</label>
+                            <input type="email" id="edit-email" class="glass-input" maxlength="50" dir="ltr">
+                        </div>
                     </div>
 
-                    <div class="input-group">
-                        <label for="edit-prize-name">
-                            <span class="input-icon">🎁</span>
-                            جایزه
-                        </label>
-                        <input
-                            type="text"
-                            id="edit-prize-name"
-                            class="glass-input"
-                            maxlength="30"
-                        >
-                    </div>
-
-                    <div class="input-group">
-                        <label for="edit-target-xp">
-                            <span class="input-icon">⭐</span>
-                            هدف
-                        </label>
-                        <div class="range-container">
-                            <input
-                                type="range"
-                                id="edit-target-xp"
-                                class="glass-range"
-                                min="50"
-                                max="200"
-                                step="10"
-                            >
-                            <div class="range-value">
-                                <span id="edit-target-xp-display">100</span>
-                                <span class="drop-icon">💧</span>
+                    <!-- Child Info -->
+                    <div class="settings-section">
+                        <h4 class="settings-section-title">👶 اطلاعات فرزند</h4>
+                        <div class="input-group">
+                            <label for="edit-child-name">اسم فرزند</label>
+                            <input type="text" id="edit-child-name" class="glass-input" maxlength="20">
+                        </div>
+                        <div class="input-group">
+                            <label for="edit-prize-name">جایزه</label>
+                            <input type="text" id="edit-prize-name" class="glass-input" maxlength="30">
+                        </div>
+                        <div class="input-group">
+                            <label for="edit-target-xp">هدف قطره آب</label>
+                            <div class="range-container">
+                                <input type="range" id="edit-target-xp" class="glass-range" min="50" max="200" step="10">
+                                <div class="range-value">
+                                    <span id="edit-target-xp-display">100</span>
+                                    <span class="drop-icon">💧</span>
+                                </div>
                             </div>
                         </div>
+                    </div>
+
+                    <!-- Google Sheets Integration -->
+                    <div class="settings-section">
+                        <h4 class="settings-section-title">📊 اتصال به گوگل شیت</h4>
+                        <div class="input-group">
+                            <label for="webhook-url">آدرس Web App گوگل</label>
+                            <input
+                                type="url"
+                                id="webhook-url"
+                                class="glass-input"
+                                placeholder="https://script.google.com/macros/s/..."
+                                dir="ltr"
+                            >
+                            <span class="input-hint">برای ذخیره اطلاعات در گوگل شیت</span>
+                        </div>
+                        <button type="button" class="glass-button secondary-button" id="test-webhook-btn">
+                            <span class="button-icon">🔗</span>
+                            <span>تست اتصال</span>
+                        </button>
                     </div>
 
                     <div class="modal-actions">

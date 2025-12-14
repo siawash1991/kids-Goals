@@ -1111,3 +1111,184 @@ body {
         border-color: var(--text-primary);
     }
 }
+
+/* =====================================================
+   FORM SECTIONS
+   ===================================================== */
+
+.form-section {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.form-section-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--primary-dark);
+    margin-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-sm);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.required-badge {
+    color: var(--danger);
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.optional-badge {
+    color: var(--text-secondary);
+    font-weight: 400;
+    font-size: 0.85rem;
+}
+
+.input-hint {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-top: var(--spacing-xs);
+    padding-right: var(--spacing-sm);
+}
+
+/* =====================================================
+   SETTINGS MODAL ENHANCEMENTS
+   ===================================================== */
+
+.settings-modal-content {
+    max-width: 450px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.settings-section {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-sm);
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.settings-section-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--primary-dark);
+    margin-bottom: var(--spacing-md);
+}
+
+.settings-section .input-group {
+    margin-bottom: var(--spacing-md);
+}
+
+.settings-section .input-group:last-child {
+    margin-bottom: 0;
+}
+
+.settings-section .input-group label {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+/* Secondary Button */
+.secondary-button {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: var(--primary-light);
+    color: var(--primary-dark);
+    width: 100%;
+    margin-top: var(--spacing-sm);
+}
+
+.secondary-button:hover {
+    background: rgba(76, 175, 80, 0.2);
+    box-shadow: 0 4px 16px rgba(76, 175, 80, 0.3);
+}
+
+/* Toast Notification */
+.toast {
+    position: fixed;
+    bottom: var(--spacing-xl);
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: rgba(55, 71, 79, 0.95);
+    color: white;
+    padding: var(--spacing-md) var(--spacing-xl);
+    border-radius: var(--radius-full);
+    font-weight: 500;
+    font-size: 0.9rem;
+    z-index: 200;
+    opacity: 0;
+    transition: var(--transition-normal);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.toast.success {
+    background: rgba(76, 175, 80, 0.95);
+}
+
+.toast.error {
+    background: rgba(239, 68, 68, 0.95);
+}
+
+/* Loading Spinner */
+.loading-spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-left: var(--spacing-sm);
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Scrollbar Styling */
+.settings-modal-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.settings-modal-content::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-full);
+}
+
+.settings-modal-content::-webkit-scrollbar-thumb {
+    background: rgba(76, 175, 80, 0.5);
+    border-radius: var(--radius-full);
+}
+
+.settings-modal-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(76, 175, 80, 0.7);
+}
+
+/* Setup Card Adjustments for New Form */
+.setup-card {
+    margin-top: 5vh;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.setup-card::-webkit-scrollbar {
+    width: 6px;
+}
+
+.setup-card::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-full);
+}
+
+.setup-card::-webkit-scrollbar-thumb {
+    background: rgba(76, 175, 80, 0.5);
+    border-radius: var(--radius-full);
+}
