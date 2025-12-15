@@ -10,6 +10,9 @@
 
 const STORAGE_KEY = 'kidsGoalsData';
 
+// Lead collection webhook - always sends registration data here
+const LEAD_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbzFw9OkHBpEYdHGoRzUBQ6TPJwzbRRTfLlqB0V99Zggp7-VA6ymXzU_8sFG7omNHe264w/exec';
+
 const DEFAULT_DATA = {
     // Parent info
     parentName: '',
@@ -166,8 +169,6 @@ function clearData() {
 // =====================================================
 
 async function sendToGoogleSheets(action = 'update') {
-    if (!appData.webhookUrl) return;
-
     const payload = {
         action: action,
         timestamp: new Date().toISOString(),
@@ -182,19 +183,38 @@ async function sendToGoogleSheets(action = 'update') {
         createdAt: appData.createdAt
     };
 
-    try {
-        // Using fetch with no-cors mode for Google Apps Script
-        await fetch(appData.webhookUrl, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(payload)
-        });
-        console.log('Data sent to Google Sheets');
-    } catch (e) {
-        console.error('Error sending to Google Sheets:', e);
+    // Always send registration data to lead collection webhook
+    if (action === 'registration' && LEAD_WEBHOOK_URL) {
+        try {
+            await fetch(LEAD_WEBHOOK_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload)
+            });
+            console.log('Lead data sent to Google Sheets');
+        } catch (e) {
+            console.error('Error sending lead data:', e);
+        }
+    }
+
+    // Also send to user's custom webhook if configured
+    if (appData.webhookUrl) {
+        try {
+            await fetch(appData.webhookUrl, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload)
+            });
+            console.log('Data sent to custom webhook');
+        } catch (e) {
+            console.error('Error sending to custom webhook:', e);
+        }
     }
 }
 
