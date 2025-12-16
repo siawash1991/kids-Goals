@@ -110,8 +110,6 @@ const elements = {
     editPrizeName: document.getElementById('edit-prize-name'),
     editTargetXP: document.getElementById('edit-target-xp'),
     editTargetXPDisplay: document.getElementById('edit-target-xp-display'),
-    webhookUrl: document.getElementById('webhook-url'),
-    testWebhookBtn: document.getElementById('test-webhook-btn'),
     clearDataBtn: document.getElementById('clear-data-btn'),
 
     // Confirm Modal
@@ -215,48 +213,6 @@ async function sendToGoogleSheets(action = 'update') {
         } catch (e) {
             console.error('Error sending to custom webhook:', e);
         }
-    }
-}
-
-async function testWebhookConnection() {
-    const webhookUrl = elements.webhookUrl.value.trim();
-
-    if (!webhookUrl) {
-        showToast('لطفاً آدرس Web App را وارد کنید', 'error');
-        return;
-    }
-
-    // Validate URL format
-    if (!webhookUrl.startsWith('https://script.google.com/')) {
-        showToast('آدرس باید با https://script.google.com/ شروع شود', 'error');
-        return;
-    }
-
-    const btn = elements.testWebhookBtn;
-    const originalHTML = btn.innerHTML;
-    btn.innerHTML = '<span class="loading-spinner"></span> در حال تست...';
-    btn.disabled = true;
-
-    try {
-        await fetch(webhookUrl, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                action: 'test',
-                timestamp: new Date().toISOString(),
-                message: 'Test connection from Kids Goals App'
-            })
-        });
-
-        showToast('درخواست ارسال شد! گوگل شیت را چک کنید', 'success');
-    } catch (e) {
-        showToast('خطا در اتصال. آدرس را بررسی کنید', 'error');
-    } finally {
-        btn.innerHTML = originalHTML;
-        btn.disabled = false;
     }
 }
 
@@ -590,7 +546,6 @@ function handleSettingsSubmit(e) {
     appData.childName = elements.editChildName.value.trim();
     appData.prizeName = elements.editPrizeName.value.trim();
     appData.targetXP = newTargetXP;
-    appData.webhookUrl = elements.webhookUrl.value.trim();
 
     // Reset celebration flag if target changed
     if (newTargetXP !== oldTargetXP) {
@@ -615,7 +570,6 @@ function openSettings() {
     elements.editPrizeName.value = appData.prizeName;
     elements.editTargetXP.value = appData.targetXP;
     elements.editTargetXPDisplay.textContent = appData.targetXP;
-    elements.webhookUrl.value = appData.webhookUrl || '';
     showModal(elements.settingsModal);
 }
 
@@ -683,7 +637,6 @@ function setupEventListeners() {
     // Settings modal
     elements.closeSettings.addEventListener('click', () => hideModal(elements.settingsModal));
     elements.settingsForm.addEventListener('submit', handleSettingsSubmit);
-    elements.testWebhookBtn.addEventListener('click', testWebhookConnection);
     elements.clearDataBtn.addEventListener('click', handleClearData);
 
     // Confirm modal
